@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Upload Photo</title>
+</head>
+
+<body>
+  <h2>Upload Photo</h2>
+  <input type="file" id="photoInput" accept="image/*"><br>
+  Uploaded Photo: <img id="displayPhoto" src="" alt="Display Photo" style="max-width: 200px;" />
+
+  <script>
+    document.getElementById('photoInput').addEventListener('change', async function () {
+      const file = this.files[0];
+      if (!file) {
+        alert("Please select a file.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        // Send the image file to the Flask server
+        const response = await fetch('/generate-presigned-url', {
+          method: 'POST',
+          body: formData
+        });
+        console.log('Uploading...');
+
+        // You can process the response further here
+        const result = await response.json();
+        console.log(result);
+
+        const uploadedImageUrl = result.url;
+
+        window.parent.postMessage(uploadedImageUrl, '*');
+
+        document.getElementById('displayPhoto').setAttribute('src', uploadedImageUrl);
+
+        console.log("Upload successful!");
+      } catch (error) {
+        console.error('Error during the upload:', error);
+      }
+    });
+  </script>
+</body>
+
+</html>

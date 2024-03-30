@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app    
+    environment:
+      - COS_ENDPOINT=${COS_ENDPOINT}
+      - COS_API_KEY_ID=${COS_API_KEY_ID}
+      - COS_INSTANCE_CRN=${COS_INSTANCE_CRN}
+      - bucket_name=${bucket_name}
+    # If you're using a .env file to store your credentials
+    env_file:
+      - .env

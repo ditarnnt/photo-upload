@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Photo Uploader</title>
+</head>
+
+<body>
+  <h1>Photo Uploader</h1>
+  <form id="photoForm">
+    Name: <input type="text" name="name"><br>
+    Country: <input type="text" name="country"><br>
+    Add Photo: <input type="text" id="photoUrl" name="photoUrl" readonly><br>
+    Uploaded Photo: <img id="uploadedPhoto" src="" alt="Uploaded Photo" style="max-width: 200px;" /><br>
+  </form>
+
+  <iframe id="photoFrame" src="" style="width: 500px; height: 500px;"></iframe>
+
+  <script>
+    window.onload = function () {
+      var iframe = document.getElementById('photoFrame');
+      var currentUrl = window.location.protocol + '//' + window.location.hostname;
+      var newSrc = currentUrl + ':5000'; // Append the specific port
+      iframe.src = newSrc;
+    };
+
+    // Listen for messages from the iframe
+    window.addEventListener("message", function (event) {
+      console.log(event);
+
+      // if (event.origin !== "http://127.0.0.1:8080") return;
+      if (event.data) {
+        var photoUrl = event.data;
+        document.getElementById('photoUrl').value = photoUrl;
+        document.getElementById('uploadedPhoto').src = photoUrl;
+      } else {
+        console.error('No photo URL received')
+      }
+    }, false);
+  </script>
+</body>
+
+</html>
